@@ -31,7 +31,11 @@ jobs:
           # passphraseless key (FileNotFoundException on settings-security.xml).
           gpg-passphrase: MAVEN_GPG_PASSPHRASE
       - name: Publish to Maven Central
-        run: mvn -B -Prelease deploy
+        # Use the pinned Maven wrapper (3.9.9), NOT the runner's bundled Maven.
+        # Newer runner Maven builds a checksum-less Central bundle (rejected with a
+        # misleading "does NOT have a .pom file") and make the gpg passphrase path
+        # fatal — pinning Maven 3.9.9 reproduces the gate-verified good bundle.
+        run: ./mvnw -B -Prelease deploy
         env:
           CENTRAL_USERNAME: ${{ secrets.CENTRAL_USERNAME }}
           CENTRAL_PASSWORD: ${{ secrets.CENTRAL_PASSWORD }}

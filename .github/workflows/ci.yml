@@ -25,4 +25,4 @@ jobs:
           java-version: ${{ matrix.java }}
           cache: maven
       - name: Run mock tests
-        run: mvn -B test
+        run: ./mvnw -B test
