@@ -25,6 +25,11 @@ jobs:
           server-username: CENTRAL_USERNAME
           server-password: CENTRAL_PASSWORD
           gpg-private-key: ${{ secrets.MAVEN_GPG_PRIVATE_KEY }}
+          # Wire the (empty) passphrase from the env var below so maven-gpg-plugin
+          # reads it directly instead of falling into the settings-security.xml
+          # SecDispatcher path — which newer runner Maven builds make FATAL for a
+          # passphraseless key (FileNotFoundException on settings-security.xml).
+          gpg-passphrase: MAVEN_GPG_PASSPHRASE
       - name: Publish to Maven Central
         run: mvn -B -Prelease deploy
         env:
